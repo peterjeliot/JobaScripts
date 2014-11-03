@@ -13,8 +13,7 @@ Setup
 6.  In the spreadsheet created in step 2: Tools --> Script Editor --> New Project.
 7.  Copy and paste the contents if the .gs files in this repo to the same relative paths (painful, I know see if you also find this painful. <http://stackoverflow.com/a/13427099/1730388>).
 8.  Upload a pdf of your resume to Google Drive.
-9.  Change the global variables in helpers.gs to the correct values for your project.
+9.  Change the global variables in helpers.gs to the correct values to refer to your file.
 10. Add some test data to the spreadsheet.  **Start out by making yourself the recipient.**
 11. Back in the code editor, Run --> bulkSend.  You should get an email with your coverletter and resume attached!
 12. When testing is complete and everything has been thoroughly proofread, click the clock icon to create an hourly trigger for bulkSend.  Now you can focus on finding job postings and customizing your cover letter.
-
