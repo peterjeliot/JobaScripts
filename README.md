@@ -17,3 +17,5 @@ Setup
 10. Add some test data to the spreadsheet.  **Start out by making yourself the recipient.**
 11. Back in the code editor, Run --> bulkSend.  You should get an email with your coverletter and resume attached!
 12. When testing is complete and everything has been thoroughly proofread, click the clock icon to create an hourly trigger for bulkSend.  Now you can focus on finding job postings and customizing your cover letter.
+
+Use at your own discretion!!
