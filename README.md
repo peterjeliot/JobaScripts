@@ -11,7 +11,7 @@ Setup
 4.  Convert the google doc to html: File --> Download as --> HTML.
 5.  Convert that html file into one that uses all inline styling (gmail strips out style tags).  Use <http://premailer.dialect.ca/>.
 6.  In the spreadsheet created in step 2: Tools --> Script Editor --> New Project.
-7.  Copy and paste the contents if the .gs files in this repo to the same relative paths (painful, I know see if you also find this painful. <http://stackoverflow.com/a/13427099/1730388>).
+7.  Copy and paste the contents of the .gs files in this repo to the same relative paths (painful, I know see here if you also find this painful. <http://stackoverflow.com/a/13427099/1730388>).
 8.  Upload a pdf of your resume to Google Drive.
 9.  Change the global variables in helpers.gs to the correct values to refer to your file.
 10. Add some test data to the spreadsheet.  **Start out by making yourself the recipient.**
