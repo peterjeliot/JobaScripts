@@ -26,17 +26,22 @@ a.get('http://www.josephecombs.com/') do |page|
   #voltron = jobs_page.search("#voltron_srp_main-content")
   doc = Nokogiri::HTML(open('voltron.html'))
   voltron = doc.css('#voltron_srp_main-content').to_s
-
+  
+  # fuck it, we'll do it live
   start_point = voltron.index("<!--{") + 4
   end_point = voltron.index("}-->")
   
   content_hash_text = voltron[start_point..end_point]
-  # puts content_hash_text
   
-  content_hash = JSON.pretty_generate(JSON.parse(content_hash_text))
+  content_hash = JSON.parse(content_hash_text)
+  # puts content_hash['content']['page']['voltron_unified_search_json']['search']['results']
   
-  puts content_hash[]
-  #File.open('voltron.html', 'w') { |file| file.write(voltron) }
+  content_hash['content']['page']['voltron_unified_search_json']['search']['results'].each do |element|
+    puts element['job']
+    puts "analyzed one job"
+  end
+  
+  # File.open('pretty.json', 'w') { |file| file.write(content_hash) }
   # puts jobs_page.body
   #jobs_page.links.each do |link|
   #  text = link.text.strip
