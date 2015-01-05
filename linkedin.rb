@@ -56,25 +56,22 @@ a.get('https://www.linkedin.com/') do |page|
     f.session_password = keys[:linkedin_password]
   end.click_button
   
-  jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&openFacets=L,C&sortBy=DD&")
-
-  # puts jobs_page.links
+  jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+  # jobs_page = Nokogiri::HTML(open('https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&'))
 
   # puts content_hash['content']['page']['voltron_unified_search_json']['search']['results']
   all_jobs_posted_today = true
   pages_scraped = 1
+  jobs_scraped = 0
   
   #be kind to the folks at linkedin and only look at 4 pages of job results max
-  while all_jobs_posted_today && pages_scraped < 4 do
-    voltron = jobs_page.search("#voltron_srp_main-content")
-    # doc = Nokogiri::HTML(open('voltron.html'))
-    # voltron = doc.css('#voltron_srp_main-content').to_s
+  while all_jobs_posted_today && pages_scraped < 3 do
 
     # fuck it, we'll do it live
-    start_point = voltron.index("<!--{") + 4
-    end_point = voltron.index("}-->")
+    start_point = jobs_page.body.index("<!--{") + 4
+    end_point = jobs_page.body.index("}-->")
   
-    content_hash_text = voltron[start_point..end_point]
+    content_hash_text = jobs_page.body[start_point..end_point]
   
     content_hash = JSON.parse(content_hash_text)
     
@@ -85,8 +82,10 @@ a.get('https://www.linkedin.com/') do |page|
       # puts Date.parse(element['job']['fmt_postedDate'])
       
       if Date.parse(element['job']['fmt_postedDate']) == Date.today
-      # if (0..99).to_a.sample > 5
+      # if true
         puts "writing job to jobs hash"
+        jobs_scraped += 1
+        puts jobs_scraped
         #cleaned_jobs.push(purify_job(element['job'])
         cleaned_jobs.push(element['job'])
         #for testing, find the terminating job listing with 5% probability
@@ -98,23 +97,17 @@ a.get('https://www.linkedin.com/') do |page|
     
     if all_jobs_posted_today
       #most likely failure point
-      jobs_page = jobs_page.link_with(title: "Next Page").click
+      # puts content_hash
+      puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+      jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
+      # jobs_page = jobs_page.link_with(text: "Next >").click
       pages_scraped += 1
       puts "sleeping to not cause linkedin to ban me"
-      sleep 16
+      sleep 10
     end
   end
-  
-  # File.open('pretty.json', 'w') { |file| file.write(content_hash) }
-  # puts jobs_page.body
-  #jobs_page.links.each do |link|
-  #  text = link.text.strip
-  #  next unless text.length > 0
-  #  # puts text
-  #  # puts link.href
-  #end
 end
 
 puts cleaned_jobs[0]
 puts cleaned_jobs.last
-puts "logged this many jobs into jobs hash: " + cleaned_jobs.length
+puts "logged this many jobs into jobs hash: " + cleaned_jobs.length.to_s
