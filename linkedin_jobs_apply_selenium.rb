@@ -73,7 +73,7 @@ jobs_arr.each do |job_hash|
     sleep 2
     apply.click
   else
-    puts apply.class
+    puts "can't apply via linkedin"
   end
   
   sleep 3
