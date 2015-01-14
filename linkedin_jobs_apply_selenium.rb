@@ -5,7 +5,7 @@ jobs_arr = get_all_jobs
 puts jobs_arr.last
 
 #for 1-13-15 testing purposes only
-18.times do 
+23.times do 
   jobs_arr.shift
 end
 
@@ -133,3 +133,5 @@ end
 
 #do something to log what happened during execution
 process_results(jobs_arr)
+
+

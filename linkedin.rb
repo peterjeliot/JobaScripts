@@ -5,6 +5,7 @@ require 'json'
 require 'open-uri'
 require 'faker'
 require 'date'
+require 'selenium-webdriver'
 
 def goto_next_page
   puts "clicked next page"
@@ -33,6 +34,8 @@ def get_credentials(filename)
     linkedin_password: temp_arr[1],
     google_username: temp_arr[2],
     google_password: temp_arr[3],
+    github_username: temp_arr[4],
+    github_password: temp_arr[5],
   }
   
   keys
@@ -115,14 +118,90 @@ end
 def process_results(jobs_arr)
   target = File.open("execution_log.log", 'w')
   
-  jobs_arr.each do |job_hash|
-    target.write(job_hash.to_json)
+  a = Mechanize.new
+  a.user_agent_alias= 'Mac Safari'
+
+  keys = get_credentials('config.txt')
+  
+  #arrange your agent
+  a.get('http://www.josephecombs.com/') do |page|
+
+    # login to jobberwocky
+    login_page = a.get("http://jobberwocky.appacademy.io/auth/github")
+
+    # login_page.search("#login_field")
+    splash_page = login_page.form_with(action: '/session') do |f|
+      f.set_fields(:login => keys[:github_username])
+      f.set_fields(:password => keys[:github_password])
+    end.click_button
     
-    ##record in jobberwocky:
-    # write_to_jobberwocky(job_hash)
+    # puts (a.methods - "a".methods).sort
+    # puts a.cookies
+    # puts splash_page.body
+    
+    xcsrf_token = splash_page.at('meta[@name="csrf-token"]')[:content]
+    puts xcsrf_token
+    
+    jobs_arr.each do |job_hash|
+      ##record in jobberwocky:
+      write_to_jobberwocky(job_hash, xcsrf_token, a)
+    end
   end
 end
-# jobs_hash = get_all_jobs
-# puts jobs_hash[0]
-# puts jobs_hash.last
-# puts "logged this many jobs into jobs hash: " + jobs_hash.length.to_s
+
+def write_to_jobberwocky(job_hash, xcsrf_token, agent)
+  #agent is a Mechanize object
+
+  page = agent.post(
+    'http://jobberwocky.appacademy.io/api/job_applications', 
+    {
+      # company_name: job_hash['fmt_companyName']
+      # "company_id" => 7193
+    }, 
+    {
+      "X-CSRF-Token"=> xcsrf_token
+    }
+  )
+end
+process_results([{'fmt_companyName' => 'JOE CORP'}])
+
+# a.get('https://www.linkedin.com/') do |page|
+
+# LEAVE THIS FOR LATER.  F JOBBERWOCKY
+# browser = Selenium::WebDriver.for :firefox
+# wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+# browser.get 'http://jobberwocky.appacademy.io/auth/github'
+# sleep 3
+# input_username = wait.until do
+#   element = browser.find_element(:id, "login_field")
+#   element
+# end
+# sleep 1
+# input_password = wait.until do
+#   element = browser.find_element(:id, "password")
+#   element
+# end
+# sleep 1
+# signin = wait.until do
+#   element = browser.find_element(:name, "commit")
+#   element
+# end
+#
+# sleep 2
+#
+# input_username.send_keys(keys[:github_username])
+# input_password.send_keys(keys[:github_password])
+#
+# sleep 2
+#
+# signin.click
+#
+# sleep 2
+#
+# sleep 15
+#
+# jobs_arr = get_all_jobs
+#
+# jobs_arr.each do |job_hash|
+#   write_to_jobberwocky(job_hash, browser)
+# end
