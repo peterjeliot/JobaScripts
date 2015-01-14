@@ -32,23 +32,33 @@ a.user_agent_alias= 'Mac Safari'
 keys = get_credentials('config.txt')
 cleaned_jobs = []
 
-# login_page = a.get("https://www.linkedin.com")
+login_page = a.get("https://www.linkedin.com")
 
-# splash_page = login_page.form_with(action: 'https://www.linkedin.com/uas/login-submit') do |f|
-#   f.session_key = keys[:linkedin_username]
-#   f.session_password = keys[:linkedin_password]
-# end.click_button
+splash_page = login_page.form_with(action: 'https://www.linkedin.com/uas/login-submit') do |f|
+  f.session_key = keys[:linkedin_username]
+  f.session_password = keys[:linkedin_password]
+end.click_button
 
 def linkedin_job_apply(job_url, agent)
   #assume a headless agent has already been instantiated, assume correct linkedin job url, assume agent has already logged into linkedin
-  # agent.get(job_url) do |page|
-  agent.get('http://www.josephecombs.com/pages/specific_job_page.html') do |page|
+  agent.get(job_url) do |page|
+  # agent.get('http://www.josephecombs.com/pages/specific_job_page.html') do |page|
     # apply-button onsite-apply
     apply_button = page.at(".apply-button")
     puts apply_button.class
     
-    job_specific_modal_page = agent.click(apply_button)
-    puts job_specific_modal_page.body
+    page_with_modal = agent.click(apply_button)
+    puts page_with_modal.class
+    puts agent.class
+    
+    # apply_button_2 = page.at(".apply-button[value=Submit]")
+    apply_button_2 = page.at(".apply-button[value=Submit]")
+    puts apply_button_2.class
+    
+    # apply_button = page_with_modal.
+    
+    # job_specific_modal_page = agent.click(apply_button)
+    # puts job_specific_modal_page.body
     #works, kind of:
     # job_button = page.search("/html[@class='os-mac']/body[@id='pagekey-jobs_view_job']/div[@id='body']/div[@class='wrapper hp-nus-wrapper']/div[@class='job-desc']/div[@class='main']/div[@id='top-card']/div[@class='top-row']/div[@class='content']/div[@id='apply-container']/div[@class='actions']/button[@class='apply-button onsite-apply']")
     # puts job_button.class
@@ -66,7 +76,7 @@ def linkedin_job_apply(job_url, agent)
     #   puts frame
     # end
     
-    File.open('specific_job_page.html', 'w') { |file| file.write(page.body) }
+    # File.open('specific_job_page.html', 'w') { |file| file.write(page.body) }
     
     # puts page.links
     # page.forms.each do |form|
