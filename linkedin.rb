@@ -7,8 +7,8 @@ require 'faker'
 require 'date'
 require 'selenium-webdriver'
 
-def goto_next_page
-  puts "clicked next page"
+def get_next_page_url(content_hash)
+  return content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
 end
 
 def write_to_google_doc(jobs_hash)
@@ -69,7 +69,8 @@ def get_all_jobs
     jobs_scraped = 0
   
     #be kind to the folks at linkedin and only look at 4 pages of job results max
-    while all_jobs_posted_today && pages_scraped < 3 do
+    # whiles all_jobs_posted_today && pages_scraped < 3 do
+    while pages_scraped < 10 do
 
       # fuck it, we'll do it live
       start_point = jobs_page.body.index("<!--{") + 4
@@ -85,8 +86,8 @@ def get_all_jobs
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
       
-        if Date.parse(element['job']['fmt_postedDate']) == Date.today
-        # if true
+        # if Date.parse(element['job']['fmt_postedDate']) == Date.today
+        if true
           puts "writing job to jobs hash"
           jobs_scraped += 1
           puts jobs_scraped
@@ -99,16 +100,22 @@ def get_all_jobs
         end
       end
     
-      if all_jobs_posted_today
-        #most likely failure point
-        # puts content_hash
-        puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
-        jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
-        # jobs_page = jobs_page.link_with(text: "Next >").click
-        pages_scraped += 1
-        puts "sleeping to not cause linkedin to ban me"
-        sleep 10
-      end
+      # if all_jobs_posted_today
+      #   #most likely failure point
+      #   # puts content_hash
+      #   puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+      #   jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
+      #   # jobs_page = jobs_page.link_with(text: "Next >").click
+      #   pages_scraped += 1
+      #   puts "sleeping to not cause linkedin to ban me"
+      #   sleep 10
+      # end
+      
+      pages_scraped += 1
+      next_url = "https://linkedin.com/" + get_next_page_url(content_hash)
+      puts "about to get jobs at: " + next_url
+      puts "current number of jobs in cleaned_jobs: " + cleaned_jobs.length.to_s
+      jobs_page = a.get(next_url)
     end
   end
   
@@ -163,7 +170,7 @@ def write_to_jobberwocky(job_hash, xcsrf_token, agent)
     }
   )
 end
-process_results([{'fmt_companyName' => 'JOE CORP'}])
+# process_results([{'fmt_companyName' => 'JOE CORP'}])
 
 # a.get('https://www.linkedin.com/') do |page|
 

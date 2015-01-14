@@ -4,8 +4,12 @@ require './linkedin.rb'
 jobs_arr = get_all_jobs
 puts jobs_arr.last
 
+puts jobs_arr
+
+# sleep 150
+
 #for 1-13-15 testing purposes only
-23.times do 
+27.times do
   jobs_arr.shift
 end
 
