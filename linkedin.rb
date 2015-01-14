@@ -112,7 +112,19 @@ def get_all_jobs
   cleaned_jobs
 end
 
-jobs_hash = get_all_jobs
-puts cleaned_jobs[0]
-puts cleaned_jobs.last
-puts "logged this many jobs into jobs hash: " + cleaned_jobs.length.to_s
+def process_results(jobs_arr)
+  target = File.open("execution_log.log", 'w')
+  
+  jobs_arr.each do |job_hash|
+    target.write(job_hash.to_json)
+    
+    ##record in jobberwocky:
+    # write_to_jobberwocky(job_hash)
+  end
+  
+  #
+end
+# jobs_hash = get_all_jobs
+# puts jobs_hash[0]
+# puts jobs_hash.last
+# puts "logged this many jobs into jobs hash: " + jobs_hash.length.to_s
