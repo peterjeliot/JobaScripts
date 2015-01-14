@@ -2,7 +2,12 @@ require 'selenium-webdriver'
 require './linkedin.rb'
 
 jobs_arr = get_all_jobs
-puts jobs_hash.last
+puts jobs_arr.last
+
+#for 1-13-15 testing purposes only
+18.times do 
+  jobs_arr.shift
+end
 
 keys = get_credentials('config.txt')
 
@@ -39,37 +44,35 @@ jobs_arr.each_with_index do |job_hash, idx|
   browser.get("https://www.linkedin.com/" + job_hash["link_viewJob"])
 
   sleep 2
-
-  apply = wait.until do
-    element = browser.find_element(:class, "onsite-apply")
-    element if element.displayed?
-  end
-  
-  sleep 3
-  
-  puts apply.class
-  
-  if apply
-    puts "about to click!"
-    apply.click
-    sleep 2
-    apply.click
-  else
+  begin
+    apply = wait.until do
+      element = browser.find_element(:class, "onsite-apply")
+      element if element.displayed?
+    end
+  rescue
     #can't apply on linkedin, log this fact and go to next job
     jobs_arr[idx]["applied"] = false
     puts "can't apply via linkedin"
     next
     sleep 2
+  else
+    puts "about to click!"
+    apply.click
+    sleep 2
+    apply.click
   end
   
-  # upload_link = wait.until do
-  #   element = browser.find_element(:class, "upload-button")
-  #   element if element.displayed?
-  # end
+  sleep 3
   
-  # sleep 2
+  upload_link = wait.until do
+    element = browser.find_element(:class, "upload-button")
+    element if element.displayed?
+  end
+
+  sleep 2
   
-  # upload_link.click
+  upload_link.click
+  sleep 2
   # upload_link = browser.find_element(:class, "upload-button")
   # upload_link.send_keys("/Users/jcombs/Desktop/JobaScripts/Joseph_Combs_Resume.pdf")
   
@@ -85,7 +88,8 @@ jobs_arr.each_with_index do |job_hash, idx|
   
   resume_input_field = wait.until do
     element = browser.find_element(:id, "resume-file-name")
-    element if element.displayed?
+    # element if element.displayed?
+    element
   end
   
   # send browser the correct filename
@@ -97,15 +101,19 @@ jobs_arr.each_with_index do |job_hash, idx|
   sleep 2
   
   # don't follow the company
-  follow_check_box = wait.until do 
-    element = browser.find_element(:id, "follow-company")
-    element if element.displayed?
+  begin
+    follow_check_box = wait.until do 
+      element = browser.find_element(:id, "follow-company")
+      # element if element.displayed?
+      element
+    end    
+  rescue
+    puts "no 'follow company' link"
+  else
+    follow_check_box.click
   end
-  
+
   sleep 2
-  
-  # follow_check_box = browser.find_element(:id, "follow-company")
-  follow_check_box.click
   
   final_submit_button = wait.until do 
     element = browser.find_element(:class, "apply-button")
@@ -119,9 +127,9 @@ jobs_arr.each_with_index do |job_hash, idx|
   
   sleep 1
   #log some information about successful execution
-  jobs_arr[idx]["applied"] = false
-  sleep 15
+  jobs_arr[idx]["applied"] = true
+  sleep 9
 end
 
 #do something to log what happened during execution
-#ex: process_results(jobs_arr)
+process_results(jobs_arr)

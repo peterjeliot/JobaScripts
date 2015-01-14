@@ -121,8 +121,6 @@ def process_results(jobs_arr)
     ##record in jobberwocky:
     # write_to_jobberwocky(job_hash)
   end
-  
-  #
 end
 # jobs_hash = get_all_jobs
 # puts jobs_hash[0]
