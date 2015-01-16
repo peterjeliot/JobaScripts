@@ -63,7 +63,7 @@ def get_all_jobs(options)
     
     
     zip = (options[:city].to_zip.sample if options[:city]) || (options[:zip_code] if options[:zip_code])  #|| 94103
-    days_back = (options[:days_back] if options[:days_back]) || 1
+    days_ago = (options[:days_ago] if options[:days_ago]) || 1
     keywords = (options[:keywords] if options[:keywords]) || "Ruby on Rails"
     
     
@@ -78,23 +78,12 @@ def get_all_jobs(options)
     
     jobs_page = a.get(current_url)
     
-    # LA:
-    # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=90405&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
-    
-    # SEATTLE:
-    # jobs_page = a.get("    jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=98101&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")")
-    
-    # NEW YORK
-    # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=10001&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
-    # jobs_page = Nokogiri::HTML(open('https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&'))
-
-    # puts content_hash['content']['page']['voltron_unified_search_json']['search']['results']
-    all_jobs_posted_today = true
+    date_limit_adhered_to = true
     pages_scraped = 1
     jobs_scraped = 0
   
     #be kind to the folks at linkedin and only look at 4 pages of job results max
-    while all_jobs_posted_today && pages_scraped < 3 do
+    while date_limit_adhered_to && pages_scraped < 3 do
     # while pages_scraped < 6 do
 
       # fuck it, we'll do it live
@@ -111,8 +100,8 @@ def get_all_jobs(options)
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
         begin
-          if Date.parse(element['job']['fmt_postedDate']) == Date.today
-          # if true
+          if Date.parse(element['job']['fmt_postedDate']) == (Date.today - days_ago)
+          # if Date.parse(element['job']['fmt_postedDate']) == Date.today
             jobs_scraped += 1
             puts jobs_scraped
             puts "wrote a job to the jobs_hash"
@@ -122,7 +111,7 @@ def get_all_jobs(options)
             #for testing, find the terminating job listing with 5% probability
             #write only the job information you need into some hash, then dump that into a google doc
           else
-            all_jobs_posted_today = false
+            date_limit_adhered_to = false
           end
         rescue
           puts "element['job']['fmt_postedDate'] is nil for some reason"
@@ -132,7 +121,7 @@ def get_all_jobs(options)
         end
       end
     
-      if all_jobs_posted_today
+      if date_limit_adhered_to
         #most likely failure point
         # puts content_hash
         puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
