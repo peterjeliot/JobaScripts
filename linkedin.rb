@@ -6,6 +6,7 @@ require 'open-uri'
 require 'faker'
 require 'date'
 require 'selenium-webdriver'
+require 'area'
 
 def get_next_page_url(content_hash)
   return content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
@@ -60,8 +61,18 @@ def get_all_jobs(options)
       f.session_password = keys[:linkedin_password]
     end.click_button
     
+    
+    zip = (options[:city].to_zip.select if options[:city])|| (options[:zip_code] if options[:zip_code])  || 94103
+    days_back = (options[:days_back] if options[:days_back]) || 1
+    keywords = (options[:keywords] if options[:keywords]) || "Ruby on Rails"
+    
+    
     # Bay Area:
-    jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=" + keywords + 
+                      "&countryCode=us&postalCode=" + zip + 
+                      "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    
     # LA:
     # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=90405&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
     

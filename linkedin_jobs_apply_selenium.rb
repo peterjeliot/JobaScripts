@@ -1,7 +1,21 @@
 require 'selenium-webdriver'
 require './linkedin.rb'
 
-jobs_arr = get_all_jobs
+jobs_arr = []
+
+setup_arr = [
+  {city: "Boston, MA", keywords: "Ruby on Rails"},
+  {city: "Washington, DC", keywords: "Ruby on Rails"},
+  {city: "Portland", keywords: "Ruby on Rails"},
+  {city: "San Francisco", keywords: "Ruby on Rails"},
+  {city: "Los Angeles", keywords: "Ruby on Rails"},
+  {city: "Rochester, NY", keywords: "Ruby on Rails"}
+]
+
+setup_arr.each do |query_options_hash|
+  jobs_arr = jobs_arr.concat(get_all_jobs(query_options_hash))
+end
+
 puts jobs_arr.last
 
 puts jobs_arr
@@ -10,9 +24,9 @@ puts jobs_arr.length
 # sleep 150
 
 #for 1-13-15 testing purposes only
-22.times do
-  jobs_arr.shift
-end
+# 22.times do
+#   jobs_arr.shift
+# end
 
 keys = get_credentials('config.txt')
 
