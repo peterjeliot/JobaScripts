@@ -62,16 +62,21 @@ def get_all_jobs(options)
     end.click_button
     
     
-    zip = (options[:city].to_zip.select if options[:city])|| (options[:zip_code] if options[:zip_code])  || 94103
+    zip = (options[:city].to_zip.sample if options[:city]) || (options[:zip_code] if options[:zip_code])  #|| 94103
     days_back = (options[:days_back] if options[:days_back]) || 1
     keywords = (options[:keywords] if options[:keywords]) || "Ruby on Rails"
     
     
     # Bay Area:
     # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
-    jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=" + keywords + 
-                      "&countryCode=us&postalCode=" + zip + 
-                      "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    current_url = "https://www.linkedin.com/vsearch/j?keywords=" + keywords + 
+                          "&countryCode=us&postalCode=" + zip.to_s + 
+                          "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&"
+    
+    puts current_url
+    sleep 1
+    
+    jobs_page = a.get(current_url)
     
     # LA:
     # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=90405&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
@@ -105,18 +110,25 @@ def get_all_jobs(options)
         puts "analyzing one job"
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
-      
-        if Date.parse(element['job']['fmt_postedDate']) == Date.today
-        # if true
-          puts "writing job to jobs hash"
-          jobs_scraped += 1
-          puts jobs_scraped
-          #cleaned_jobs.push(purify_job(element['job'])
-          cleaned_jobs.push(element['job'])
-          #for testing, find the terminating job listing with 5% probability
-          #write only the job information you need into some hash, then dump that into a google doc
+        begin
+          if Date.parse(element['job']['fmt_postedDate']) == Date.today
+          # if true
+            jobs_scraped += 1
+            puts jobs_scraped
+            puts "wrote a job to the jobs_hash"
+            #cleaned_jobs.push(purify_job(element['job'])
+            cleaned_jobs.push(element['job'])
+            puts element['job']['fmt_location']
+            #for testing, find the terminating job listing with 5% probability
+            #write only the job information you need into some hash, then dump that into a google doc
+          else
+            all_jobs_posted_today = false
+          end
+        rescue
+          puts "element['job']['fmt_postedDate'] is nil for some reason"
+          puts element
         else
-          all_jobs_posted_today = false
+
         end
       end
     

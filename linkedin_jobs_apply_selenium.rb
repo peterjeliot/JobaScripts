@@ -13,12 +13,17 @@ setup_arr = [
 ]
 
 setup_arr.each do |query_options_hash|
-  jobs_arr = jobs_arr.concat(get_all_jobs(query_options_hash))
+  puts "Now inspecting city: " + query_options_hash[:city]
+  jobs_arr = jobs_arr + get_all_jobs(query_options_hash)
+  puts "New jobs_arr length: " + jobs_arr.length.to_s
+  puts "last element of jobs_arr: "
+  puts jobs_arr.last
+  sleep 10
 end
 
-puts jobs_arr.last
+# puts jobs_arr.last
 
-puts jobs_arr
+# puts jobs_arr
 puts jobs_arr.length
 
 # sleep 150
