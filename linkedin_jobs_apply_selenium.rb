@@ -5,11 +5,12 @@ jobs_arr = get_all_jobs
 puts jobs_arr.last
 
 puts jobs_arr
+puts jobs_arr.length
 
 # sleep 150
 
 #for 1-13-15 testing purposes only
-27.times do
+22.times do
   jobs_arr.shift
 end
 
@@ -62,8 +63,9 @@ jobs_arr.each_with_index do |job_hash, idx|
   else
     puts "about to click!"
     apply.click
-    sleep 2
+    sleep 3
     apply.click
+    sleep 1
   end
   
   sleep 3
@@ -74,34 +76,29 @@ jobs_arr.each_with_index do |job_hash, idx|
   end
 
   sleep 2
-  
+
   upload_link.click
-  sleep 2
   # upload_link = browser.find_element(:class, "upload-button")
   # upload_link.send_keys("/Users/jcombs/Desktop/JobaScripts/Joseph_Combs_Resume.pdf")
   
-  # resume_upload_button = wait.until do
-  #   element = browser.find_element(:class, "resume-file-input")
-  #   element if element.displayed?
-  # end
+  res_file_link = wait.until do
+    element = browser.find_element(:class, "resume-file-input")
+    element
+  end
+  resume = File.open("Joseph_Combs_Resume.pdf")
+  sleep 1
+  res_file_link.send_keys(File.expand_path(File.dirname(resume)) + "/" + resume.path)
+  sleep 1
     
   # resume_upload_button.click
   #####brings up the osx filepicker dialog
   # resume_upload_button = browser.find_element(:class, "resume-file-input")
   # resume_upload_button.send_keys("Joseph_Combs_Resume.pdf")
   
-  resume_input_field = wait.until do
-    element = browser.find_element(:id, "resume-file-name")
-    # element if element.displayed?
-    element
-  end
-  
   # send browser the correct filename
   # resume_input_field = browser.find_element(:id, "resume-file-name")
   sleep 3
-  browser.execute_script("arguments[0].type = 'visible'", resume_input_field)
-  sleep 3
-  resume_input_field.send_keys("Joseph_Combs_Resume.pdf")
+  # browser.execute_script("arguments[0].type = 'visible'", resume_input_field)
   sleep 2
   
   # don't follow the company

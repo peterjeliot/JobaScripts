@@ -41,7 +41,7 @@ def get_credentials(filename)
   keys
 end
 
-def get_all_jobs
+def get_all_jobs(options)
   a = Mechanize.new
   a.user_agent_alias= 'Mac Safari'
 
@@ -59,8 +59,17 @@ def get_all_jobs
       f.session_key = keys[:linkedin_username]
       f.session_password = keys[:linkedin_password]
     end.click_button
-  
+    
+    # Bay Area:
     jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    # LA:
+    # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=90405&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
+    
+    # SEATTLE:
+    # jobs_page = a.get("    jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=98101&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")")
+    
+    # NEW YORK
+    # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=10001&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
     # jobs_page = Nokogiri::HTML(open('https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&'))
 
     # puts content_hash['content']['page']['voltron_unified_search_json']['search']['results']
@@ -69,8 +78,8 @@ def get_all_jobs
     jobs_scraped = 0
   
     #be kind to the folks at linkedin and only look at 4 pages of job results max
-    # whiles all_jobs_posted_today && pages_scraped < 3 do
-    while pages_scraped < 10 do
+    while all_jobs_posted_today && pages_scraped < 3 do
+    # while pages_scraped < 6 do
 
       # fuck it, we'll do it live
       start_point = jobs_page.body.index("<!--{") + 4
@@ -86,8 +95,8 @@ def get_all_jobs
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
       
-        # if Date.parse(element['job']['fmt_postedDate']) == Date.today
-        if true
+        if Date.parse(element['job']['fmt_postedDate']) == Date.today
+        # if true
           puts "writing job to jobs hash"
           jobs_scraped += 1
           puts jobs_scraped
@@ -100,22 +109,22 @@ def get_all_jobs
         end
       end
     
-      # if all_jobs_posted_today
-      #   #most likely failure point
-      #   # puts content_hash
-      #   puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
-      #   jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
-      #   # jobs_page = jobs_page.link_with(text: "Next >").click
-      #   pages_scraped += 1
-      #   puts "sleeping to not cause linkedin to ban me"
-      #   sleep 10
-      # end
+      if all_jobs_posted_today
+        #most likely failure point
+        # puts content_hash
+        puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+        jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
+        # jobs_page = jobs_page.link_with(text: "Next >").click
+        pages_scraped += 1
+        puts "sleeping to not cause linkedin to ban me"
+        sleep 10
+      end
       
-      pages_scraped += 1
-      next_url = "https://linkedin.com/" + get_next_page_url(content_hash)
-      puts "about to get jobs at: " + next_url
-      puts "current number of jobs in cleaned_jobs: " + cleaned_jobs.length.to_s
-      jobs_page = a.get(next_url)
+      # pages_scraped += 1
+      # next_url = "https://linkedin.com/" + get_next_page_url(content_hash)
+      # puts "about to get jobs at: " + next_url
+      # puts "current number of jobs in cleaned_jobs: " + cleaned_jobs.length.to_s
+      # jobs_page = a.get(next_url)
     end
   end
   
