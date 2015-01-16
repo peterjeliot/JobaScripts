@@ -100,7 +100,7 @@ def get_all_jobs(options)
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
         begin
-          if Date.parse(element['job']['fmt_postedDate']) == (Date.today - days_ago)
+          if Date.parse(element['job']['fmt_postedDate']) >= (Date.today - (days_ago - 1))
           # if Date.parse(element['job']['fmt_postedDate']) == Date.today
             jobs_scraped += 1
             puts jobs_scraped

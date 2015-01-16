@@ -9,7 +9,8 @@ setup_arr = [
   {city: "Portland", keywords: "Ruby on Rails"},
   {city: "San Francisco", keywords: "Ruby on Rails"},
   {city: "Los Angeles", keywords: "Ruby on Rails"},
-  {city: "Rochester, NY", keywords: "Ruby on Rails"}
+  {city: "Rochester, NY", keywords: "Ruby on Rails"},
+  {city: "Austin, TX", keywords: "Ruby on Rails", :days_ago "30"}
 ]
 
 setup_arr.each do |query_options_hash|
