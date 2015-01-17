@@ -180,20 +180,81 @@ def process_results(jobs_arr)
   end
 end
 
-def write_to_jobberwocky(job_hash, xcsrf_token, agent)
+def write_to_jobberwocky
+# def write_to_jobberwocky(job_hash, xcsrf_token, agent)
   #agent is a Mechanize object
-
-  page = agent.post(
-    'http://jobberwocky.appacademy.io/api/job_applications', 
-    {
-      # company_name: job_hash['fmt_companyName']
-      # "company_id" => 7193
-    }, 
-    {
-      "X-CSRF-Token"=> xcsrf_token
-    }
+  #come back to this later
+  # page = agent.post(
+  #   'http://jobberwocky.appacademy.io/api/job_applications',
+  #   {
+  #     # company_name: job_hash['fmt_companyName']
+  #     # "company_id" => 7193
+  #   },
+  #   {
+  #     "X-CSRF-Token"=> xcsrf_token
+  #   }
+  # )
+  
+  #MAKE GET TO CORRECT URL REQUEST TO JOBBERWOCKY
+  #companyName	Link	recipient	submitted	EffortLevel	LastFollowUp	jobTitle	companyBlurb	companyCity	Comment	useEmailAddress	emailSentDate
+  
+  #only write records where we didnt also apply, so:
+  
+  sleep 2
+  
+  #testing only
+  #no fing clue why testing will not work 
+  agent = Mechanize.new
+  login_page = agent.get("https://accounts.google.com")
+  keys = get_credentials('config.txt')
+  
+  login_page.form_with(id: 'gaia_loginform') do |f|
+    # puts (f.methods - "f".methods).sort
+    f.field_with(:type => "email").value = keys[:google_username]
+    f.field_with(:type => "password").value = keys[:google_password]
+  end
+  
+  login_button = login_page.search(".rc-button-submit")[0]
+  login_button.click
+  
+  # puts splash_page.body
+  
+  work_motherfucker = agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
+    "companyName=" + "Google" + 
+    # "&linkedinJobId=" + "029834234" +
+    "&recipient=" + 
+    "&submitted=" + "1" +
+    "&EffortLevel=" + "Low" +
+    "&LastFollowUp=" + "1/14/15" +
+    "&jobTitle=" + "CEO" +
+    "&companyBlurb=" + 
+    "&companyCity=" + "Santa Monica, CA" +
+    "&Comment=" + 
+    "&useEmailAddress=" + "0"
   )
+  
+  puts work_motherfucker.body
+  
+  # if !job_hash["applied"]
+  #   agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
+  #     "companyName=" + job_hash['fmt_companyName'] +
+  #     "&linkedinJobId=" + job_hash['id'] +
+  #     "&recipient=" + +
+  #     "&submitted=" + "1" +
+  #     "&EffortLevel=" + "Low" +
+  #     "&LastFollowUp=" + job_hash['fmt_postedDate'] +
+  #     "&jobTitle=" + job_hash['fmt_jobTitle'] +
+  #     "&companyBlurb=" + +
+  #     "&companyCity=" + job_hash['fmt_location'] +
+  #     "&Comment=" + +
+  #     "&useEmailAddress=" + "0" +
+  #   )
+  # end
+  
+  sleep 1
 end
+
+write_to_jobberwocky
 # process_results([{'fmt_companyName' => 'JOE CORP'}])
 
 # a.get('https://www.linkedin.com/') do |page|
