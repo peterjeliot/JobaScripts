@@ -4,13 +4,13 @@ require './linkedin.rb'
 jobs_arr = []
 
 setup_arr = [
-  {city: "Boston, MA", keywords: "Ruby on Rails"},
-  {city: "Washington, DC", keywords: "Ruby on Rails"},
-  {city: "Portland", keywords: "Ruby on Rails"},
-  {city: "San Francisco", keywords: "Ruby on Rails"},
-  {city: "Los Angeles", keywords: "Ruby on Rails"},
-  {city: "Rochester, NY", keywords: "Ruby on Rails"},
-  {city: "Austin, TX", keywords: "Ruby on Rails", :days_ago "30"}
+  {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "Portland", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1},
+  {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1 }
 ]
 
 setup_arr.each do |query_options_hash|

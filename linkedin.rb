@@ -83,7 +83,7 @@ def get_all_jobs(options)
     jobs_scraped = 0
   
     #be kind to the folks at linkedin and only look at 4 pages of job results max
-    while date_limit_adhered_to && pages_scraped < 3 do
+    while date_limit_adhered_to && pages_scraped < 15 do
     # while pages_scraped < 6 do
 
       # fuck it, we'll do it live
@@ -99,6 +99,9 @@ def get_all_jobs(options)
         puts "analyzing one job"
         # puts element['job']['fmt_postedDate']
         # puts Date.parse(element['job']['fmt_postedDate'])
+        # puts "does the comparison pass? "
+        # puts (Date.parse(element['job']['fmt_postedDate']) >= (Date.today - (days_ago - 1))).to_s
+        
         begin
           if Date.parse(element['job']['fmt_postedDate']) >= (Date.today - (days_ago - 1))
           # if Date.parse(element['job']['fmt_postedDate']) == Date.today
@@ -115,7 +118,7 @@ def get_all_jobs(options)
           end
         rescue
           puts "element['job']['fmt_postedDate'] is nil for some reason"
-          puts element
+          # puts element
         else
 
         end
