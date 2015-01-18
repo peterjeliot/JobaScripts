@@ -127,7 +127,9 @@ def get_all_jobs(options)
       if date_limit_adhered_to
         #most likely failure point
         # puts content_hash
-        puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+        if content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+          puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+        end
         jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
         # jobs_page = jobs_page.link_with(text: "Next >").click
         pages_scraped += 1
@@ -147,41 +149,34 @@ def get_all_jobs(options)
 end
 
 def process_results(jobs_arr)
-  target = File.open("execution_log.log", 'w')
-  
-  a = Mechanize.new
-  a.user_agent_alias= 'Mac Safari'
-
+  #do something to log what happened during execution
+  agent = Mechanize.new
+  login_page = agent.get("https://accounts.google.com")
   keys = get_credentials('config.txt')
+
+  puts "about to 2factor into google and log all the jobs you didn't apply to, press enter to continue"
+  junk = gets.chomp
+
+  second_step_login_page = login_page.form_with(id: 'gaia_loginform') do |f|
+    # puts (f.methods - "f".methods).sort
+    f.field_with(:type => "email").value = keys[:google_username]
+    f.field_with(:type => "password").value = keys[:google_password]
+  end.submit
+
+  second_step_login_page.form_with(id: 'gaia_secondfactorform') do |f|
+    puts "enter your google 2-step code that was just texted to you:"
+    textcode = gets.chomp
+    f.field_with(:id => "smsUserPin").value = textcode
+  end.submit
   
-  #arrange your agent
-  a.get('http://www.josephecombs.com/') do |page|
-
-    # login to jobberwocky
-    login_page = a.get("http://jobberwocky.appacademy.io/auth/github")
-
-    # login_page.search("#login_field")
-    splash_page = login_page.form_with(action: '/session') do |f|
-      f.set_fields(:login => keys[:github_username])
-      f.set_fields(:password => keys[:github_password])
-    end.click_button
-    
-    # puts (a.methods - "a".methods).sort
-    # puts a.cookies
-    # puts splash_page.body
-    
-    xcsrf_token = splash_page.at('meta[@name="csrf-token"]')[:content]
-    puts xcsrf_token
-    
-    jobs_arr.each do |job_hash|
-      ##record in jobberwocky:
-      write_to_jobberwocky(job_hash, xcsrf_token, a)
-    end
+  jobs_arr.each do |job_hash|
+    ##record in jobberwocky:
+    write_to_google_spreadsheet(job_hash, agent)
   end
 end
 
-def write_to_jobberwocky
-# def write_to_jobberwocky(job_hash, xcsrf_token, agent)
+# def write_to_jobberwocky
+def write_to_google_spreadsheet(job_hash, agent)
   #agent is a Mechanize object
   #come back to this later
   # page = agent.post(
@@ -200,61 +195,72 @@ def write_to_jobberwocky
   
   #only write records where we didnt also apply, so:
   
-  sleep 2
+  # sleep 2
   
   #testing only
   #no fing clue why testing will not work 
-  agent = Mechanize.new
-  login_page = agent.get("https://accounts.google.com")
-  keys = get_credentials('config.txt')
+  # agent = Mechanize.new
+  # login_page = agent.get("https://accounts.google.com")
+  # keys = get_credentials('config.txt')
+  #
+  # second_step_login_page = login_page.form_with(id: 'gaia_loginform') do |f|
+  #   # puts (f.methods - "f".methods).sort
+  #   f.field_with(:type => "email").value = keys[:google_username]
+  #   f.field_with(:type => "password").value = keys[:google_password]
+  # end.submit
   
-  login_page.form_with(id: 'gaia_loginform') do |f|
-    # puts (f.methods - "f".methods).sort
-    f.field_with(:type => "email").value = keys[:google_username]
-    f.field_with(:type => "password").value = keys[:google_password]
-  end
+  # puts (agent.methods - "agent".methods).sort
+    
+  # second_step_login_page.form_with(id: 'gaia_secondfactorform') do |f|
+  #   puts f.class
+  #   puts "enter your google 2-step code that was just texted to you:"
+  #   textcode = gets.chomp
+  #   puts f.class
+  #   f.field_with(:id => "smsUserPin").value = textcode
+  # end.submit
   
-  login_button = login_page.search(".rc-button-submit")[0]
-  login_button.click
+  # puts agent.page.body
+  
+  # login_button = login_page.search(".rc-button-submit")[0]
+  # login_button.click_button
   
   # puts splash_page.body
+                                # "https://script.google.com/macros/s/AKfycbyDbn-qjWL_ZoAx3rr36CAoAwK9xe_AeafKgwQqhsAafhTPsN0/exec"
+                                # "https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev"
+  # work_motherfucker = agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
+  #   "companyName=" + "Cashflow Enterprisez, LLC" +
+  #   "&linkedinJobId=" + "029834234" +
+  #   "&recipient=" +
+  #   "&submitted=" + "1" +
+  #   "&EffortLevel=" + "Low" +
+  #   "&LastFollowUp=" + "1/14/15" +
+  #   "&jobTitle=" + "CEO" +
+  #   "&companyBlurb=" +
+  #   "&companyCity=" + "NW Washington, DC" +
+  #   "&Comment=" +
+  #   "&useEmailAddress=" + "0"
+  # )
   
-  work_motherfucker = agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
-    "companyName=" + "Google" + 
-    # "&linkedinJobId=" + "029834234" +
-    "&recipient=" + 
-    "&submitted=" + "1" +
-    "&EffortLevel=" + "Low" +
-    "&LastFollowUp=" + "1/14/15" +
-    "&jobTitle=" + "CEO" +
-    "&companyBlurb=" + 
-    "&companyCity=" + "Santa Monica, CA" +
-    "&Comment=" + 
-    "&useEmailAddress=" + "0"
-  )
-  
-  puts work_motherfucker.body
-  
-  # if !job_hash["applied"]
-  #   agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
-  #     "companyName=" + job_hash['fmt_companyName'] +
-  #     "&linkedinJobId=" + job_hash['id'] +
-  #     "&recipient=" + +
-  #     "&submitted=" + "1" +
-  #     "&EffortLevel=" + "Low" +
-  #     "&LastFollowUp=" + job_hash['fmt_postedDate'] +
-  #     "&jobTitle=" + job_hash['fmt_jobTitle'] +
-  #     "&companyBlurb=" + +
-  #     "&companyCity=" + job_hash['fmt_location'] +
-  #     "&Comment=" + +
-  #     "&useEmailAddress=" + "0" +
-  #   )
-  # end
+  if !job_hash["applied"]
+    agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
+      "companyName=" + job_hash['fmt_companyName'] +
+      "&linkedinJobId=" + job_hash['id'].to_s +
+      "&recipient=" +
+      "&submitted=" + "1" +
+      "&EffortLevel=" + "Low" +
+      "&LastFollowUp=" + job_hash['fmt_postedDate'].to_s +
+      "&jobTitle=" + job_hash['fmt_jobTitle'].to_s +
+      "&companyBlurb=" + 
+      "&companyCity=" + job_hash['fmt_location'].to_s +
+      "&Comment=" + 
+      "&useEmailAddress=" + "0"
+    )
+  end
   
   sleep 1
 end
 
-write_to_jobberwocky
+# write_to_jobberwocky
 # process_results([{'fmt_companyName' => 'JOE CORP'}])
 
 # a.get('https://www.linkedin.com/') do |page|
