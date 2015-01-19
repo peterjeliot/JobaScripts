@@ -3,6 +3,10 @@ JobaScripts
 
 Some Google Drive scripts which greatly reduce the pain of the job hunt.
 
+Note
+===========
+The linkedin stuff you see is completely experimental.  The setup should still work in exactly the same way to get things working in Google scripts.
+
 Setup
 ===========
 1.  Create a directory in Google Drive for this project.

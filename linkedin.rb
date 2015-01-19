@@ -60,17 +60,22 @@ def get_all_jobs(options)
       f.session_key = keys[:linkedin_username]
       f.session_password = keys[:linkedin_password]
     end.click_button
-    
-    
-    zip = (options[:city].to_zip.sample if options[:city]) || (options[:zip_code] if options[:zip_code])  #|| 94103
+
+    country_code = options[:country_code]    
+    if country_code == "us"
+      zip = (options[:city].to_zip.sample if options[:city]) || (options[:zip_code] if options[:zip_code])  #|| 94103
+    else
+      zip = options[:zip_code]
+    end
     days_ago = (options[:days_ago] if options[:days_ago]) || 1
     keywords = (options[:keywords] if options[:keywords]) || "Ruby on Rails"
+
     
     
     # Bay Area:
     # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
     current_url = "https://www.linkedin.com/vsearch/j?keywords=" + keywords + 
-                          "&countryCode=us&postalCode=" + zip.to_s + 
+                          "&countryCode=" + country_code + "&postalCode=" + zip.to_s + 
                           "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&"
     
     puts current_url
@@ -109,7 +114,10 @@ def get_all_jobs(options)
             puts jobs_scraped
             puts "wrote a job to the jobs_hash"
             #cleaned_jobs.push(purify_job(element['job'])
-            cleaned_jobs.push(element['job'])
+            blacklisted_companies = get_blacklisted_companies
+            if !blacklisted_companies.include?(element['job']['fmt_companyName'])
+              cleaned_jobs.push(element['job'])
+            end
             puts element['job']['fmt_location']
             #for testing, find the terminating job listing with 5% probability
             #write only the job information you need into some hash, then dump that into a google doc
@@ -127,10 +135,18 @@ def get_all_jobs(options)
       if date_limit_adhered_to
         #most likely failure point
         # puts content_hash
-        if content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
-          puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+        begin
+          if content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+            puts content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
+          end
+        rescue
+          puts "there are fewer than 25 results in the time period specified, and thusly there is no next page to go to"
+          #so break out of the loop because if I don't do this it will be an infinte loop
+          date_limit_adhered_to = false
+        else
+          jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
         end
-        jobs_page = a.get("https://www.linkedin.com" + content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL'])
+
         # jobs_page = jobs_page.link_with(text: "Next >").click
         pages_scraped += 1
         puts "sleeping to not cause linkedin to ban me"
@@ -169,10 +185,18 @@ def process_results(jobs_arr)
     f.field_with(:id => "smsUserPin").value = textcode
   end.submit
   
+  blacklisted_companies = get_blacklisted_companies
+  
   jobs_arr.each do |job_hash|
     ##record in jobberwocky:
-    write_to_google_spreadsheet(job_hash, agent)
+    if !blacklisted_companies.include?(job_hash['fmt_companyName']) && !job_hash["applied"]
+      write_to_google_spreadsheet(job_hash, agent)
+    end
   end
+end
+
+def get_blacklisted_companies
+  return ["CyberCoders", "Worldlink"]
 end
 
 # def write_to_jobberwocky
@@ -240,22 +264,20 @@ def write_to_google_spreadsheet(job_hash, agent)
   #   "&Comment=" +
   #   "&useEmailAddress=" + "0"
   # )
-  
-  if !job_hash["applied"]
-    agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
-      "companyName=" + job_hash['fmt_companyName'] +
-      "&linkedinJobId=" + job_hash['id'].to_s +
-      "&recipient=" +
-      "&submitted=" + "1" +
-      "&EffortLevel=" + "Low" +
-      "&LastFollowUp=" + job_hash['fmt_postedDate'].to_s +
-      "&jobTitle=" + job_hash['fmt_jobTitle'].to_s +
-      "&companyBlurb=" + 
-      "&companyCity=" + job_hash['fmt_location'].to_s +
-      "&Comment=" + 
-      "&useEmailAddress=" + "0"
-    )
-  end
+   
+  agent.get("https://script.google.com/macros/s/AKfycbypIYX9V_N7mE6dbMPwjswBiJ28FMgmPap4f0_pBUY/dev?" +
+    "companyName=" + job_hash['fmt_companyName'] +
+    "&linkedinJobId=" + job_hash['id'].to_s +
+    "&recipient=" +
+    "&submitted=" + "1" +
+    "&EffortLevel=" + "Low" +
+    "&LastFollowUp=" + job_hash['fmt_postedDate'].to_s +
+    "&jobTitle=" + job_hash['fmt_jobTitle'].to_s +
+    "&companyBlurb=" + 
+    "&companyCity=" + job_hash['fmt_location'].to_s +
+    "&Comment=" + 
+    "&useEmailAddress=" + "0"
+  )
   
   sleep 1
 end

@@ -4,13 +4,16 @@ require './linkedin.rb'
 jobs_arr = []
 
 setup_arr = [
-  # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1},
-  {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1}
-  # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1},
-  # {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1},
-  # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1},
-  # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1},
-  # {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1 }
+  # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"}
+  # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"}
+  # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Melbourne, AUS", keywords: "Ruby on Rails", days_ago: 30, country_code: "au", zip_code: 3050},
+  # {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 30, country_code: "au", zip_code: 2052},
+  # {city: "London, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "SE1"}
 ]
 
 setup_arr.each do |query_options_hash|
@@ -30,9 +33,9 @@ puts jobs_arr.length
 # sleep 150
 
 #for 1-13-15 testing purposes only
-# 22.times do
-#   jobs_arr.shift
-# end
+9.times do
+  jobs_arr.shift
+end
 
 keys = get_credentials('config.txt')
 
@@ -42,7 +45,6 @@ pword = keys[:linkedin_password]
 browser = Selenium::WebDriver.for :firefox
 browser.get 'https://linkedin.com'
 wait = Selenium::WebDriver::Wait.new(:timeout => 10)
-
 
 input_username = wait.until do
   element = browser.find_element(:id, "session_key-login")
@@ -135,20 +137,20 @@ jobs_arr.each_with_index do |job_hash, idx|
   end
 
   sleep 2
-  
-  final_submit_button = wait.until do 
-    element = browser.find_element(:class, "apply-button")
-    element if element.displayed?
+
+  i = 0
+  while final_submit_button = browser.find_elements(:class, "apply-button")[1]
+    final_submit_button.click
+    i += 1
+    puts "just clicked submit button, times clicked = " + i.to_s
+    sleep 5
   end
   
-  sleep 2
-  
-  final_submit_button = browser.find_elements(:class, "apply-button")[1]
-  final_submit_button.click
-  
   sleep 1
+  # final_submit_button = browser.find_elements(:class, "apply-button")[1]
+  jobs_arr[idx]["applied"] = true  
   #log some information about successful execution
-  jobs_arr[idx]["applied"] = true
+
   sleep 9
 end
 
