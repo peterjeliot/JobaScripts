@@ -4,16 +4,20 @@ require './linkedin.rb'
 jobs_arr = []
 
 setup_arr = [
-  # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  # {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"}
-  # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  # {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"}
-  # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  # {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  # {city: "Melbourne, AUS", keywords: "Ruby on Rails", days_ago: 30, country_code: "au", zip_code: 3050},
-  # {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 30, country_code: "au", zip_code: 2052},
-  # {city: "London, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "SE1"}
+  {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "San Diego, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "New York City, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 10004},
+  {city: "Atlanta, GA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 30334},
+  {city: "Philadelphia, PA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 19123},
+  {city: "Melbourne, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 3050},
+  {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 2052},
+  {city: "London, UK", keywords: "Ruby on Rails", days_ago: 1, country_code: "gb", zip_code: "SE1"}
 ]
 
 setup_arr.each do |query_options_hash|
@@ -33,9 +37,9 @@ puts jobs_arr.length
 # sleep 150
 
 #for 1-13-15 testing purposes only
-9.times do
-  jobs_arr.shift
-end
+# 9.times do
+#   jobs_arr.shift
+# end
 
 keys = get_credentials('config.txt')
 
