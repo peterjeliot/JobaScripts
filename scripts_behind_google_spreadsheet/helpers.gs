@@ -1,3 +1,7 @@
+function myFunction() {
+  Logger.log("lol");
+}
+
 function stringifiedCurrentDate() {
   var today = new Date();
   var dd = today.getDate();
@@ -31,10 +35,6 @@ return true;
   }
 }
 
-//Add the unique google drive id of the folder you want to save generated cover letters to here (extract it from the 'share' link)
 var FOLDER = '0B7HFAtB1-yVpVVhBQVVEN09fOE0';
-//Do the same for your Resume
-var RESUME = '0B7HFAtB1-yVpbXY5TTNNNXpUV1k';
-//Do the same for your html minified cover letter template
-//it may be fine to do this as we are doing it right now - dumping tbe entire thing into a string
-//var COVERTEMPLATE = '0B7HFAtB1-yVpU3NoTWFPTkVmZ2M';
+var RESUME = '0B7HFAtB1-yVpRVRGckZTOVBxbzQ';
+var RESUMEPIC = '0B7HFAtB1-yVpRVRGckZTOVBxbzQ';
