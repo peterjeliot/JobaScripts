@@ -23,7 +23,9 @@ setup_arr = [
   # {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 2052},
   # {city: "London, UK", keywords: "Ruby on Rails", days_ago: 1, country_code: "gb", zip_code: "SE1"},
   {city: "Manchester, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "M20"},
-  {city: "Leeds, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "LS1"}
+  {city: "Leeds, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "LS1"},
+  {city: "Edinburgh, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "EH5"},
+  {city: "Glasgow, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "G1 1GH"}
   # {city: "Toronto, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "M5H 3L5"},
   # {city: "Montreal, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "H2X 2S8"},
   # {city: "Vancouver, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "V5Z 3V6"},
