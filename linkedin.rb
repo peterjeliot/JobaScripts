@@ -196,7 +196,7 @@ def process_results(jobs_arr)
 end
 
 def get_blacklisted_companies
-  return ["CyberCoders", "Worldlink", "FILD", "Terran Systems", "WunderLand Group", "Unifyze", "Robert Half Technology"]
+  return ["CyberCoders", "Worldlink", "FILD", "Terran Systems", "WunderLand Group", "Unifyze", "Robert Half Technology", "Workbridge Associates"]
 end
 
 # def write_to_jobberwocky
