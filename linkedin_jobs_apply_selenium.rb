@@ -4,23 +4,30 @@ require './linkedin.rb'
 jobs_arr = []
 
 setup_arr = [
-  {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "San Diego, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Chicago, IL", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Seattle, WA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Denver, CO", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "New York City, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 10004},
-  {city: "Atlanta, GA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 30334},
-  {city: "Philadelphia, PA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 19123},
-  {city: "Melbourne, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 3050},
-  {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 2052},
-  {city: "London, UK", keywords: "Ruby on Rails", days_ago: 1, country_code: "gb", zip_code: "SE1"}
+  # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "San Jose, CA", keywords: "Ruby on Rails", days_ago: 15, country_code: "us"},
+  # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "San Diego, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Chicago, IL", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Seattle, WA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Denver, CO", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Austin, TX", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "New York City, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 10004},
+  # {city: "Atlanta, GA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 30334},
+  # {city: "Philadelphia, PA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us", zip_code: 19123},
+  # {city: "Melbourne, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 3050},
+  # {city: "Sydney, AUS", keywords: "Ruby on Rails", days_ago: 1, country_code: "au", zip_code: 2052},
+  # {city: "London, UK", keywords: "Ruby on Rails", days_ago: 1, country_code: "gb", zip_code: "SE1"},
+  {city: "Manchester, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "M20"},
+  {city: "Leeds, UK", keywords: "Ruby on Rails", days_ago: 30, country_code: "gb", zip_code: "LS1"}
+  # {city: "Toronto, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "M5H 3L5"},
+  # {city: "Montreal, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "H2X 2S8"},
+  # {city: "Vancouver, Canada", keywords: "Ruby on Rails", days_ago: 20, country_code: "ca", zip_code: "V5Z 3V6"},
+  # {city: "Auckland, NZ", keywords: "Ruby on Rails", days_ago: 30, country_code: "nz", zip_code: "1023"}
 ]
 
 setup_arr.each do |query_options_hash|
