@@ -7,6 +7,7 @@ require 'faker'
 require 'date'
 require 'selenium-webdriver'
 require 'area'
+require 'byebug'
 
 def get_next_page_url(content_hash)
   return content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
@@ -92,12 +93,15 @@ def get_all_jobs(options)
     # while pages_scraped < 6 do
 
       # fuck it, we'll do it live
+      byebug
       start_point = jobs_page.body.index("<!--{") + 4
+      # start_point = jobs_page.body.index("<!--{") + 5
       end_point = jobs_page.body.index("}-->")
+      # end_point = jobs_page.body.index("}-->") - 1
   
       content_hash_text = jobs_page.body[start_point..end_point]
   
-      content_hash = JSON.parse(content_hash_text)
+      content_hash = JSON.parse(content_hash_text.to_s)
     
       content_hash['content']['page']['voltron_unified_search_json']['search']['results'].each do |element|
         # puts element['job']

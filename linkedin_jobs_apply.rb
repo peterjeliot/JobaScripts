@@ -8,7 +8,7 @@ require 'date'
 
 # jobs2/view/38265883?trk=vsrp_jobs_res_name&trkInfo=VSRPsearchId%3A753023581420485345435%2CVSRPtargetId%3A38265883%2CVSRPcmpt%3Aprimary
 
-def get_credentials(filename)
+def sherry_zhou_resume(filename)
   temp_arr = []
   i = 0
   File.readlines(filename).each do |line, idx|
@@ -29,7 +29,7 @@ end
 a = Mechanize.new
 a.user_agent_alias= 'Mac Safari'
 
-keys = get_credentials('config.txt')
+keys = sherry_zhou_resume('config.txt')
 cleaned_jobs = []
 
 login_page = a.get("https://www.linkedin.com")

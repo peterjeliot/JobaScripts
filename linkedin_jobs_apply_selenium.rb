@@ -5,11 +5,13 @@ jobs_arr = []
 
 setup_arr = [
   # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "San Francisco", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "San Jose, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "San Francisco, CA", keywords: "Sales", days_ago: 30, country_code: "us"},
+  # {city: "San Jose, CA", keywords: "Ruby on Rails", days_ago: 30, country_code: "us"},
+  # {city: "San Jose, CA", keywords: "JavaScript", days_ago: 30, country_code: "us"},
+  {city: "San Francisco, CA", keywords: "Marketing", days_ago: 30, country_code: "us"},
+  # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "San Diego, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "Chicago, IL", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
@@ -45,9 +47,9 @@ puts jobs_arr.length
 # sleep 150
 
 #for 1-13-15 testing purposes only
-# 9.times do
-#   jobs_arr.shift
-# end
+93.times do
+  jobs_arr.shift
+end
 
 keys = get_credentials('config.txt')
 
@@ -119,7 +121,7 @@ jobs_arr.each_with_index do |job_hash, idx|
     element = browser.find_element(:class, "resume-file-input")
     element
   end
-  resume = File.open("Joseph_Combs_Resume.pdf")
+  resume = File.open("sherry_zhou_resume.pdf")
   sleep 1
   res_file_link.send_keys(File.expand_path(File.dirname(resume)) + "/" + resume.path)
   sleep 1
