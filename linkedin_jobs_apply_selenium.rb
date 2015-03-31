@@ -120,7 +120,7 @@ jobs_arr.each_with_index do |job_hash, idx|
     element = browser.find_element(:class, "resume-file-input")
     element
   end
-  resume = File.open("sherry_zhou_resume.pdf")
+  resume = File.open("Joseph_Combs_Resume.pdf")
   sleep 1
   res_file_link.send_keys(File.expand_path(File.dirname(resume)) + "/" + resume.path)
   sleep 1
