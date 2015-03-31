@@ -7,10 +7,9 @@ setup_arr = [
   # {city: "Boston, MA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "Washington, DC", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "Portland, OR", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
-  {city: "San Francisco, CA", keywords: "Sales", days_ago: 30, country_code: "us"},
-  # {city: "San Jose, CA", keywords: "Ruby on Rails", days_ago: 30, country_code: "us"},
-  # {city: "San Jose, CA", keywords: "JavaScript", days_ago: 30, country_code: "us"},
-  {city: "San Francisco, CA", keywords: "Marketing", days_ago: 30, country_code: "us"},
+  {city: "San Francisco, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  {city: "San Jose, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
+  # {city: "San Jose, CA", keywords: "JavaScript", days_ago: 1, country_code: "us"},
   # {city: "Los Angeles", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "San Diego, CA", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
   # {city: "Rochester, NY", keywords: "Ruby on Rails", days_ago: 1, country_code: "us"},
@@ -47,9 +46,9 @@ puts jobs_arr.length
 # sleep 150
 
 #for 1-13-15 testing purposes only
-93.times do
-  jobs_arr.shift
-end
+# 1.times do
+#   jobs_arr.shift
+# end
 
 keys = get_credentials('config.txt')
 

@@ -8,6 +8,7 @@ require 'date'
 require 'selenium-webdriver'
 require 'area'
 require 'byebug'
+# require 'active-support'
 
 def get_next_page_url(content_hash)
   return content_hash['content']['page']['voltron_unified_search_json']['search']['baseData']['resultPagination']['nextPage']['pageURL']
@@ -77,7 +78,8 @@ def get_all_jobs(options)
     # jobs_page = a.get("https://www.linkedin.com/vsearch/j?keywords=Ruby%20on%20Rails&countryCode=us&postalCode=94103&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&")
     current_url = "https://www.linkedin.com/vsearch/j?keywords=" + keywords + 
                           "&countryCode=" + country_code + "&postalCode=" + zip.to_s + 
-                          "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&"
+                          # "&orig=ADVS&distance=50&locationType=I&rsid=753023581420172248465&openFacets=L,C&sortBy=DD&"
+                          "&orig=ADVS&distance=50&locationType=I&openFacets=L,C&sortBy=DD&"
     
     puts current_url
     sleep 1
@@ -88,12 +90,10 @@ def get_all_jobs(options)
     pages_scraped = 1
     jobs_scraped = 0
   
-    #be kind to the folks at linkedin and only look at 4 pages of job results max
     while date_limit_adhered_to && pages_scraped < 15 do
-    # while pages_scraped < 6 do
 
       # fuck it, we'll do it live
-      byebug
+      # byebug
       start_point = jobs_page.body.index("<!--{") + 4
       # start_point = jobs_page.body.index("<!--{") + 5
       end_point = jobs_page.body.index("}-->")
